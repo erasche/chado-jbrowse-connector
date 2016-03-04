@@ -14,21 +14,21 @@ import (
 
 var db *sqlx.DB
 
-func okJson(w http.ResponseWriter) {
+func okJSON(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	w.WriteHeader(http.StatusOK)
 }
 
-func notOkJson(w http.ResponseWriter) {
+func notOkJSON(w http.ResponseWriter) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	w.WriteHeader(http.StatusBadRequest)
 }
 
 func StatsGlobal(w http.ResponseWriter, r *http.Request) {
-	okJson(w)
+	okJSON(w)
 	w.Write([]byte("{\"featureDensity\": 0.01}"))
 }
 
@@ -42,7 +42,7 @@ func FeatureSeqHandler(w http.ResponseWriter, r *http.Request) {
 	refseq := vars["refseq"]
 
 	if end < start {
-		notOkJson(w)
+		notOkJSON(w)
 		return
 	}
 
@@ -75,7 +75,7 @@ func SequenceHandler(w http.ResponseWriter, r *http.Request, organism string, re
 		Features: seq,
 	}
 
-	okJson(w)
+	okJSON(w)
 	if err := json.NewEncoder(w).Encode(container); err != nil {
 		panic(err)
 	}
@@ -98,7 +98,7 @@ func FeatureHandler(w http.ResponseWriter, r *http.Request, organism string, ref
 		Features: features,
 	}
 
-	okJson(w)
+	okJSON(w)
 	if err := json.NewEncoder(w).Encode(container); err != nil {
 		panic(err)
 	}
@@ -126,7 +126,7 @@ func refSeqsData(organism string) []refSeqStruct {
 	seqs := []refSeqStruct{}
 	db.Select(&seqs, refSeqQuery, organism)
 
-	for idx, _ := range seqs {
+	for idx := range seqs {
 		seqs[idx].SeqChunkSize = 20000
 		seqs[idx].End = seqs[idx].Length
 	}
@@ -137,7 +137,7 @@ func RefSeqs(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	organism := vars["organism"]
 	seqs := refSeqsData(organism)
-	okJson(w)
+	okJSON(w)
 	if err := json.NewEncoder(w).Encode(seqs); err != nil {
 		panic(err)
 	}
@@ -181,11 +181,11 @@ func OrgTracksConf(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func OrgTrackListJson(w http.ResponseWriter, r *http.Request) {
+func OrgTrackListJSON(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	organism := vars["organism"]
 
-	tracks := make([]interface{}, 0)
+	var tracks []interface{}
 	queryMap := make(map[string]string)
 	queryMap["sequence"] = "true"
 
@@ -223,7 +223,7 @@ func OrgTrackListJson(w http.ResponseWriter, r *http.Request) {
 		Tracks: tracks,
 	}
 
-	okJson(w)
+	okJSON(w)
 	if err := json.NewEncoder(w).Encode(data); err != nil {
 		panic(err)
 	}
@@ -239,7 +239,7 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 	check(err)
 
 	orgs := listOrganisms()
-	items := make([]string, 0)
+	var items []string
 	for _, org := range orgs {
 		items = append(items, org.CommonName)
 	}
@@ -258,9 +258,9 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 	check(err)
 }
 
-func Db(dbUrl, listen string) {
+func Db(dbURL, listen string) {
 	var err error
-	db, err = sqlx.Connect("postgres", dbUrl)
+	db, err = sqlx.Connect("postgres", dbURL)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -270,7 +270,7 @@ func Db(dbUrl, listen string) {
 	r.HandleFunc("/link/{organism}/stats/global", StatsGlobal)
 	r.HandleFunc("/link/{organism}/features/{refseq}", FeatureSeqHandler)
 	r.HandleFunc("/link/{organism}/tracks.conf", OrgTracksConf)
-	r.HandleFunc("/link/{organism}/trackList.json", OrgTrackListJson)
+	r.HandleFunc("/link/{organism}/trackList.json", OrgTrackListJSON)
 	r.HandleFunc("/", MainHandler)
 
 	http.Handle("/", r)
