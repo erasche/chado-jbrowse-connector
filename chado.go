@@ -29,7 +29,7 @@ func notOkJSON(w http.ResponseWriter) {
 
 func statsGlobal(w http.ResponseWriter, r *http.Request) {
 	okJSON(w)
-	w.Write([]byte("{\"featureDensity\": 0.01}"))
+    _, _ = w.Write([]byte("{\"featureDensity\": 0.01}"))
 }
 
 func featureSeqHandler(w http.ResponseWriter, r *http.Request) {
@@ -47,12 +47,11 @@ func featureSeqHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Form.Get("sequence") == "true" {
-		SequenceHandler(w, r, organism, refseq, start, end)
+		sequenceHandler(w, r, organism, refseq, start, end)
 	} else {
-		FeatureHandler(w, r, organism, refseq, start, end)
+		featureHandler(w, r, organism, refseq, start, end)
 	}
 }
-
 
 func sequenceHandler(w http.ResponseWriter, r *http.Request, organism string, refseq string, start int, end int) {
 	seq := []refSeqWithSeqStruct{}
@@ -65,7 +64,7 @@ func sequenceHandler(w http.ResponseWriter, r *http.Request, organism string, re
 		seq[idx].End = end
 	}
 
-	container := &FeatureContainerRefSeqWithStruct{
+	container := &featureContainerRefSeqWithStruct{
 		Features: seq,
 	}
 
@@ -76,7 +75,7 @@ func sequenceHandler(w http.ResponseWriter, r *http.Request, organism string, re
 }
 
 func featureHandler(w http.ResponseWriter, r *http.Request, organism string, refseq string, start int, end int) {
-	features := []SimpleFeature{}
+	features := []simpleFeature{}
 	soType := r.Form.Get("soType")
 
 	err := db.Select(&features, simpleFeatQuery, organism, refseq, soType, start, end)
@@ -85,10 +84,10 @@ func featureHandler(w http.ResponseWriter, r *http.Request, organism string, ref
 	}
 
 	for idx := range features {
-		features[idx].Subfeatures = []ProcessedFeature{}
+		features[idx].Subfeatures = []processedFeature{}
 	}
 
-	container := &FeatureContainerFeatures{
+	container := &featureContainerFeatures{
 		Features: features,
 	}
 
@@ -99,8 +98,8 @@ func featureHandler(w http.ResponseWriter, r *http.Request, organism string, ref
 }
 
 func listOrganisms() []organism {
-	data := []Organism{}
-	err := db.Select(&data, OrganismQuery)
+	data := []organism{}
+	err := db.Select(&data, organismQuery)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -118,7 +117,7 @@ func listSoTypes(organism string) []soType {
 
 func refSeqsData(organism string) []refSeqStruct {
 	seqs := []refSeqStruct{}
-	db.Select(&seqs, refSeqQuery, organism)
+    _ = db.Select(&seqs, refSeqQuery, organism)
 
 	for idx := range seqs {
 		seqs[idx].SeqChunkSize = 20000
@@ -151,7 +150,7 @@ func orgTrackListJSON(w http.ResponseWriter, r *http.Request) {
 	queryMap := make(map[string]string)
 	queryMap["sequence"] = "true"
 
-	tracks = append(tracks, SeqTrack{
+	tracks = append(tracks, seqTrack{
 		UseAsRefSeqStore: true,
 		Label:            "ref_seq",
 		Key:              "REST Reference Sequence",
@@ -164,7 +163,7 @@ func orgTrackListJSON(w http.ResponseWriter, r *http.Request) {
 	for _, sotype := range listSoTypes(organism) {
 		tmpMap := make(map[string]string)
 		tmpMap["soType"] = sotype.Type
-		tracks = append(tracks, TrackListTrack{
+		tracks = append(tracks, trackListTrack{
 			Category: "Generic SO Type Tracks",
 			Label:    organism + "_" + sotype.Type,
 			Key:      sotype.Type,
@@ -176,9 +175,9 @@ func orgTrackListJSON(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	data := &TrackList{
+	data := &trackList{
 		RefSeqs: addr + "/link/" + organism + "/refSeqs.json",
-		Names: NameStruct{
+		Names: nameStruct{
 			Type: "REST",
 			URL:  addr + "/link/names",
 		},
@@ -236,5 +235,5 @@ func connect(dbURL, listen string) {
 	r.HandleFunc("/", mainHandler)
 
 	http.Handle("/", r)
-	http.ListenAndServe(listen, r)
+	_ = http.ListenAndServe(listen, r)
 }
