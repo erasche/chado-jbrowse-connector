@@ -1,5 +1,65 @@
 package main
 
+type SoType struct {
+	Type string `db:"type"`
+}
+
+var SoTypeQuery = `
+SELECT
+	cvterm.name as type
+FROM
+	feature, cvterm
+WHERE
+	(feature.organism_id = (select organism_id from organism where common_name = $1))
+	AND
+	feature.type_id = cvterm.cvterm_id
+GROUP BY
+	cvterm.name
+	;
+
+`
+type SimpleFeature struct {
+	Type        string             `db:"feature_type" json:"type"`
+	Start       int                `db:"feature_fmin" json:"start"`
+	End         int                `db:"feature_fmax" json:"end"`
+	Strand      int                `db:"feature_strand" json:"strand"`
+	Name        string             `db:"feature_name" json:"name"`
+	UniqueID    string             `db:"feature_uniquename" json:"uniqueID"`
+	Score       float64            ` json:"score"`
+	Subfeatures []ProcessedFeature ` json:"subfeatures"`
+}
+
+var simpleFeatQuery = `
+SELECT
+    cvterm.name AS feature_type,
+
+    featureloc.fmin AS feature_fmin,
+    featureloc.fmax AS feature_fmax,
+    featureloc.strand AS feature_strand,
+
+    feature.name AS feature_name,
+    feature.uniquename AS feature_uniquename
+
+FROM feature
+    INNER JOIN
+    featureloc ON (feature.feature_id = featureloc.feature_id)
+    INNER JOIN
+    cvterm ON (feature.type_id = cvterm.cvterm_id)
+WHERE
+    (feature.organism_id = (select organism_id from organism where common_name = $1))
+	AND
+    (cvterm.name = $3)
+    AND
+    (featureloc.srcfeature_id = (select feature_id from feature where name = $2))
+	AND
+	(featureloc.fmin <= $5 AND $4 <= featureloc.fmax)
+;
+`
+    //AND
+    //(featureloc.srcfeature_id = (select feature_id from feature where name = $2))
+    //AND
+    //(featureloc.fmin <= $5 AND $4 <= featureloc.fmax)
+
 type TripFeature struct {
 	GeneType   string `db:"gene_type"`
 	GeneName   string `db:"gene_name"`
