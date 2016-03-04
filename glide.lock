@@ -1,0 +1,18 @@
+hash: 4d9f7f8be96d53b649a8b6c91016f73cf75e75cea9c2acadb96699809bb35452
+updated: 2016-03-04T22:11:47.530480096Z
+imports:
+- name: github.com/codegangsta/cli
+  version: a2943485b110df8842045ae0600047f88a3a56a1
+- name: github.com/gorilla/context
+  version: 1ea25387ff6f684839d82767c1733ff4d4d15d0a
+- name: github.com/gorilla/mux
+  version: c9e326e2bdec29039a3761c07bece13133863e1e
+- name: github.com/jmoiron/sqlx
+  version: 398dd5876282499cdfd4cb8ea0f31a672abe9495
+  subpackages:
+  - reflectx
+- name: github.com/lib/pq
+  version: e182dc4027e2ded4b19396d638610f2653295f36
+  subpackages:
+  - oid
+devImports: []

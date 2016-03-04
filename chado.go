@@ -2,11 +2,11 @@ package main
 
 import (
 	"encoding/json"
-"html/template"
 	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
+	"html/template"
 	"log"
 	"net/http"
 	"strconv"
@@ -87,11 +87,11 @@ func FeatureHandler(w http.ResponseWriter, r *http.Request, organism string, ref
 
 	err := db.Select(&features, simpleFeatQuery, organism, refseq, soType, start, end)
 	if err != nil {
-		fmt.Println(err);
+		fmt.Println(err)
 	}
 
 	for idx := range features {
-		features[idx].Subfeatures = []ProcessedFeature{};
+		features[idx].Subfeatures = []ProcessedFeature{}
 	}
 
 	container := &FeatureContainerFeatures{
@@ -106,23 +106,23 @@ func FeatureHandler(w http.ResponseWriter, r *http.Request, organism string, ref
 
 func listOrganisms() []Organism {
 	data := []Organism{}
-	err := db.Select(&data, OrganismQuery);
+	err := db.Select(&data, OrganismQuery)
 	if err != nil {
-		fmt.Println(err);
+		fmt.Println(err)
 	}
 	return data
 }
 
 func listSoTypes(organism string) []SoType {
 	soTypeList := []SoType{}
-	err := db.Select(&soTypeList, SoTypeQuery, organism);
+	err := db.Select(&soTypeList, SoTypeQuery, organism)
 	if err != nil {
-		fmt.Println(err);
+		fmt.Println(err)
 	}
 	return soTypeList
 }
 
-func refSeqsData(organism string) []refSeqStruct{
+func refSeqsData(organism string) []refSeqStruct {
 	seqs := []refSeqStruct{}
 	db.Select(&seqs, refSeqQuery, organism)
 
@@ -144,36 +144,35 @@ func RefSeqs(w http.ResponseWriter, r *http.Request) {
 }
 
 type TrackList struct {
-	RefSeqs  string `json:"refSeqs"`
-	Names NameStruct `json:"names"`
-	Tracks []interface{} `json:"tracks"`
+	RefSeqs string        `json:"refSeqs"`
+	Names   NameStruct    `json:"names"`
+	Tracks  []interface{} `json:"tracks"`
 }
 
 type NameStruct struct {
 	Type string `json:"type"`
-	URL string `json:"url"`
+	URL  string `json:"url"`
 }
 
 type TrackListTrack struct {
-	Category string `json:"category"`
-	Label string `json:"label"`
-	Type string `json:"type"`
-	TrackType string `json:"trackType"`
-	Key string `json:"key"`
-	Query map[string]string `json:"query"`
-	RegionFeatureDensities bool `json:"regionFeatureDensities"`
-	StoreClass string `json:"storeClass"`
+	Category               string            `json:"category"`
+	Label                  string            `json:"label"`
+	Type                   string            `json:"type"`
+	TrackType              string            `json:"trackType"`
+	Key                    string            `json:"key"`
+	Query                  map[string]string `json:"query"`
+	RegionFeatureDensities bool              `json:"regionFeatureDensities"`
+	StoreClass             string            `json:"storeClass"`
 }
 
 type SeqTrack struct {
-	UseAsRefSeqStore bool `json:"useAsRefSeqStore"`
-	Label string `json:"label"`
-	Key string `json:"key"`
-	Type string `json:"type"`
-	StoreClass string `json:"storeClass"`
-	BaseURL string `json:"baseUrl"`
-	Query map[string]string `json:"query"`
-
+	UseAsRefSeqStore bool              `json:"useAsRefSeqStore"`
+	Label            string            `json:"label"`
+	Key              string            `json:"key"`
+	Type             string            `json:"type"`
+	StoreClass       string            `json:"storeClass"`
+	BaseURL          string            `json:"baseUrl"`
+	Query            map[string]string `json:"query"`
 }
 
 func OrgTracksConf(w http.ResponseWriter, r *http.Request) {
@@ -192,12 +191,12 @@ func OrgTrackListJson(w http.ResponseWriter, r *http.Request) {
 
 	tracks = append(tracks, SeqTrack{
 		UseAsRefSeqStore: true,
-		Label: "ref_seq",
-		Key: "REST Reference Sequence",
-		Type: "JBrowse/View/Track/Sequence",
-		StoreClass: "JBrowse/Store/SeqFeature/REST",
-		BaseURL: addr + "/link/" + organism +"/",
-		Query: queryMap,
+		Label:            "ref_seq",
+		Key:              "REST Reference Sequence",
+		Type:             "JBrowse/View/Track/Sequence",
+		StoreClass:       "JBrowse/Store/SeqFeature/REST",
+		BaseURL:          addr + "/link/" + organism + "/",
+		Query:            queryMap,
 	})
 
 	for _, sotype := range listSoTypes(organism) {
@@ -205,12 +204,12 @@ func OrgTrackListJson(w http.ResponseWriter, r *http.Request) {
 		tmpMap["soType"] = sotype.Type
 		tracks = append(tracks, TrackListTrack{
 			Category: "Generic SO Type Tracks",
-			Label: organism + "_" + sotype.Type,
-			Key: sotype.Type,
-			Query: tmpMap,
+			Label:    organism + "_" + sotype.Type,
+			Key:      sotype.Type,
+			Query:    tmpMap,
 			RegionFeatureDensities: true,
-			Type: "JBrowse/View/Track/HTMLFeatures",
-			TrackType: "JBrowse/View/Track/HTMLFeatures",
+			Type:       "JBrowse/View/Track/HTMLFeatures",
+			TrackType:  "JBrowse/View/Track/HTMLFeatures",
 			StoreClass: "JBrowse/Store/SeqFeature/REST",
 		})
 	}
@@ -219,7 +218,7 @@ func OrgTrackListJson(w http.ResponseWriter, r *http.Request) {
 		RefSeqs: addr + "/link/" + organism + "/refSeqs.json",
 		Names: NameStruct{
 			Type: "REST",
-			URL: addr + "/link/names",
+			URL:  addr + "/link/names",
 		},
 		Tracks: tracks,
 	}
@@ -239,20 +238,20 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.New("webpage").Parse(homeTemplate)
 	check(err)
 
-    orgs := listOrganisms()
-    items := make([]string, 0)
-    for _, org := range orgs {
-        items = append(items, org.CommonName)
-    }
+	orgs := listOrganisms()
+	items := make([]string, 0)
+	for _, org := range orgs {
+		items = append(items, org.CommonName)
+	}
 
 	data := struct {
-		Title string
-		Items []string
+		Title      string
+		Items      []string
 		FakeDirURL string
 	}{
-		Title: "Chado-JBrowse Connector",
+		Title:      "Chado-JBrowse Connector",
 		FakeDirURL: addr + "/link",
-		Items: items,
+		Items:      items,
 	}
 
 	err = t.Execute(w, data)

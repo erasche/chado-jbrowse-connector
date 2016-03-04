@@ -1,8 +1,8 @@
 package main
 
 import (
-	"os"
 	"github.com/codegangsta/cli"
+	"os"
 )
 
 var addr string
@@ -24,7 +24,7 @@ func main() {
 			Value: "0.0.0.0:5000",
 		},
 		cli.StringFlag{
-			Name: "sitePath",
+			Name:  "sitePath",
 			Value: "http://shed.hx42.org:5000",
 			Usage: "set externally accessible URL. I'll fix this eventually.",
 		},

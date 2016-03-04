@@ -1,8 +1,8 @@
 package main
 
 type Organism struct {
-	Genus string `db:"genus"`
-	Species string `db:"species"`
+	Genus      string `db:"genus"`
+	Species    string `db:"species"`
 	CommonName string `db:"common_name"`
 }
 
@@ -31,6 +31,7 @@ GROUP BY
 	;
 
 `
+
 type SimpleFeature struct {
 	Type        string             `db:"feature_type" json:"type"`
 	Start       int                `db:"feature_fmin" json:"start"`
@@ -68,10 +69,11 @@ WHERE
 	(featureloc.fmin <= $5 AND $4 <= featureloc.fmax)
 ;
 `
-    //AND
-    //(featureloc.srcfeature_id = (select feature_id from feature where name = $2))
-    //AND
-    //(featureloc.fmin <= $5 AND $4 <= featureloc.fmax)
+
+//AND
+//(featureloc.srcfeature_id = (select feature_id from feature where name = $2))
+//AND
+//(featureloc.fmin <= $5 AND $4 <= featureloc.fmax)
 
 type TripFeature struct {
 	GeneType   string `db:"gene_type"`

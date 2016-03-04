@@ -1,0 +1,6 @@
+package: github.com/erasche/chado-jbrowse-connector
+import:
+- package: github.com/codegangsta/cli
+- package: github.com/gorilla/mux
+- package: github.com/jmoiron/sqlx
+- package: github.com/lib/pq
