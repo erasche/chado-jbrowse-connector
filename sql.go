@@ -1,23 +1,23 @@
 package main
 
-type Organism struct {
+type organism struct {
 	Genus      string `db:"genus"`
 	Species    string `db:"species"`
 	CommonName string `db:"common_name"`
 }
 
-var OrganismQuery = `
+var organismQuery = `
 SELECT
 	genus, species, common_name
 FROM
 	organism
 `
 
-type SoType struct {
+type soType struct {
 	Type string `db:"type"`
 }
 
-var SoTypeQuery = `
+var soTypeQuery = `
 SELECT
 	cvterm.name as type
 FROM
@@ -32,7 +32,7 @@ GROUP BY
 
 `
 
-type SimpleFeature struct {
+type simpleFeature struct {
 	Type        string             `db:"feature_type" json:"type"`
 	Start       int                `db:"feature_fmin" json:"start"`
 	End         int                `db:"feature_fmax" json:"end"`
@@ -75,7 +75,7 @@ WHERE
 //AND
 //(featureloc.fmin <= $5 AND $4 <= featureloc.fmax)
 
-type TripFeature struct {
+type tripFeature struct {
 	GeneType   string `db:"gene_type"`
 	GeneName   string `db:"gene_name"`
 	GeneFmin   string `db:"gene_fmin"`
@@ -95,7 +95,7 @@ type TripFeature struct {
 	Subfeat2Strand string `db:"subfeat2_strand"`
 }
 
-type ProcessedFeature struct {
+type processedFeature struct {
 	Type        string             `json:"type"`
 	Start       int                `json:"start"`
 	End         int                `json:"end"`
@@ -199,3 +199,42 @@ WHERE
     residues is not NULL
 ;
 `
+
+type featureContainerRefSeqWithStruct struct {
+	Features []refSeqWithSeqStruct `json:"features"`
+}
+type featureContainerFeatures struct {
+	Features []simpleFeature `json:"features"`
+}
+type trackList struct {
+	RefSeqs string        `json:"refSeqs"`
+	Names   NameStruct    `json:"names"`
+	Tracks  []interface{} `json:"tracks"`
+}
+
+type nameStruct struct {
+	Type string `json:"type"`
+	URL  string `json:"url"`
+}
+
+type trackListTrack struct {
+	Category               string            `json:"category"`
+	Label                  string            `json:"label"`
+	Type                   string            `json:"type"`
+	TrackType              string            `json:"trackType"`
+	Key                    string            `json:"key"`
+	Query                  map[string]string `json:"query"`
+	RegionFeatureDensities bool              `json:"regionFeatureDensities"`
+	StoreClass             string            `json:"storeClass"`
+}
+
+type seqTrack struct {
+	UseAsRefSeqStore bool              `json:"useAsRefSeqStore"`
+	Label            string            `json:"label"`
+	Key              string            `json:"key"`
+	Type             string            `json:"type"`
+	StoreClass       string            `json:"storeClass"`
+	BaseURL          string            `json:"baseUrl"`
+	Query            map[string]string `json:"query"`
+}
+

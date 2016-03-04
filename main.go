@@ -33,7 +33,7 @@ func main() {
 	app.Action = func(c *cli.Context) {
 
 		addr = c.String("sitePath")
-		Db(
+		connect(
 			c.String("db"),
 			c.String("listenAddr"),
 		)
