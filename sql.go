@@ -1,5 +1,18 @@
 package main
 
+type Organism struct {
+	Genus string `db:"genus"`
+	Species string `db:"species"`
+	CommonName string `db:"common_name"`
+}
+
+var OrganismQuery = `
+SELECT
+	genus, species, common_name
+FROM
+	organism
+`
+
 type SoType struct {
 	Type string `db:"type"`
 }
