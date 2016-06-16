@@ -29,7 +29,7 @@ func notOkJSON(w http.ResponseWriter) {
 
 func statsGlobal(w http.ResponseWriter, r *http.Request) {
 	okJSON(w)
-    _, _ = w.Write([]byte("{\"featureDensity\": 0.01}"))
+	_, _ = w.Write([]byte("{\"featureDensity\": 0.01}"))
 }
 
 func featureSeqHandler(w http.ResponseWriter, r *http.Request) {
@@ -82,7 +82,7 @@ func featureHandler(w http.ResponseWriter, r *http.Request, organism string, ref
 	if err != nil {
 		fmt.Println(err)
 	}
-    toplevels := []simpleFeature{}
+	toplevels := []simpleFeature{}
 
 	for idx := range features {
 		if !features[idx].NullName.Valid {
@@ -95,9 +95,9 @@ func featureHandler(w http.ResponseWriter, r *http.Request, organism string, ref
 			toplevels = append(toplevels, features[idx])
 		} else {
 			for idx2 := range toplevels {
-			    if features[idx].ParentID == toplevels[idx2].FeatureID {
-			        toplevels[idx2].Subfeatures = append(toplevels[idx2].Subfeatures, features[idx])
-			    }
+				if features[idx].ParentID == toplevels[idx2].FeatureID {
+					toplevels[idx2].Subfeatures = append(toplevels[idx2].Subfeatures, features[idx])
+				}
 			}
 		}
 	}
@@ -133,8 +133,8 @@ func listSoTypes(organism string) []soType {
 func refSeqsData(organism string) []refSeqStruct {
 	var err error
 	seqs := []refSeqStruct{}
-    err = db.Select(&seqs, refSeqQuery, organism)
-    if err != nil {
+	err = db.Select(&seqs, refSeqQuery, organism)
+	if err != nil {
 		log.Fatalln(err)
 	}
 
