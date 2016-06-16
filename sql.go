@@ -64,7 +64,7 @@ WHERE
 	AND
     (cvterm.name = $3)
     AND
-    (featureloc.srcfeature_id = (select feature_id from feature where name = $2))
+    (featureloc.srcfeature_id = (select feature_id from feature where uniquename = $2))
 	AND
 	(featureloc.fmin <= $5 AND $4 <= featureloc.fmax)
 ;
@@ -97,7 +97,7 @@ type refSeqStruct struct {
 
 var refSeqQuery = `
 SELECT
-    seqlen, name
+    seqlen, uniquename as name
 FROM
     feature
 WHERE
@@ -119,9 +119,9 @@ SELECT
 FROM
     feature
 WHERE
-    name = $2
+    uniquename = $2
     AND
-    feature.organism_id = (select organism_id from organism where common_name = $1)
+    feature.organism_id IN (select organism_id from organism where common_name = $1)
     AND
     residues is not NULL
 ;
