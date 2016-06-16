@@ -78,17 +78,32 @@ func featureHandler(w http.ResponseWriter, r *http.Request, organism string, ref
 	features := []simpleFeature{}
 	soType := r.Form.Get("soType")
 
-	err := db.Select(&features, simpleFeatQuery, organism, refseq, soType, start, end)
+	err := db.Select(&features, simpleFeatQueryWithParent, organism, refseq, soType, start, end)
 	if err != nil {
 		fmt.Println(err)
 	}
+    toplevels := []simpleFeature{}
 
 	for idx := range features {
-		features[idx].Subfeatures = []processedFeature{}
+		if !features[idx].NullName.Valid {
+			features[idx].Name = "(unnamed)"
+		} else {
+			features[idx].Name = features[idx].NullName.String
+		}
+		features[idx].Subfeatures = []simpleFeature{}
+		if features[idx].Type == soType {
+			toplevels = append(toplevels, features[idx])
+		} else {
+			for idx2 := range toplevels {
+			    if features[idx].ParentID == toplevels[idx2].FeatureID {
+			        toplevels[idx2].Subfeatures = append(toplevels[idx2].Subfeatures, features[idx])
+			    }
+			}
+		}
 	}
 
 	container := &featureContainerFeatures{
-		Features: features,
+		Features: toplevels,
 	}
 
 	okJSON(w)
