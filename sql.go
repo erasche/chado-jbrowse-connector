@@ -101,10 +101,12 @@ SELECT
 FROM
     feature
 WHERE
-    feature.organism_id = (select organism_id from organism where common_name = $1)
+    organism_id IN (select organism_id from organism where common_name = $1)
     AND
-    type_id = 455
+    type_id IN (select cvterm_id from cvterm join cv using (cv_id)
+                where cvterm.name = 'chromosome' and cv.name = 'sequence')
 ;
+
 `
 
 type refSeqWithSeqStruct struct {
