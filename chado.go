@@ -116,8 +116,12 @@ func listSoTypes(organism string) []soType {
 }
 
 func refSeqsData(organism string) []refSeqStruct {
+	var err error
 	seqs := []refSeqStruct{}
-    _ = db.Select(&seqs, refSeqQuery, organism)
+    err = db.Select(&seqs, refSeqQuery, organism)
+    if err != nil {
+		log.Fatalln(err)
+	}
 
 	for idx := range seqs {
 		seqs[idx].SeqChunkSize = 20000
