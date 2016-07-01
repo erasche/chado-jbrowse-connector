@@ -86,7 +86,6 @@ type processedFeature struct {
 	Subfeatures []processedFeature `json:"subfeatures"`
 }
 
-
 type refSeqStruct struct {
 	Length       int    `db:"seqlen" json:"length"`
 	Name         string `db:"name" json:"name"`

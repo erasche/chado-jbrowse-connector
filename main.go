@@ -38,8 +38,8 @@ func main() {
 			c.String("listenAddr"),
 		)
 	}
-    err := app.Run(os.Args)
-    if err != nil {
-        panic(err)
-    }
+	err := app.Run(os.Args)
+	if err != nil {
+		panic(err)
+	}
 }

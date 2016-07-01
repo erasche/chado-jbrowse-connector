@@ -29,7 +29,7 @@ func notOkJSON(w http.ResponseWriter) {
 
 func statsGlobal(w http.ResponseWriter, r *http.Request) {
 	okJSON(w)
-    _, _ = w.Write([]byte("{\"featureDensity\": 0.01}"))
+	_, _ = w.Write([]byte("{\"featureDensity\": 0.01}"))
 }
 
 func featureSeqHandler(w http.ResponseWriter, r *http.Request) {
@@ -117,7 +117,7 @@ func listSoTypes(organism string) []soType {
 
 func refSeqsData(organism string) []refSeqStruct {
 	seqs := []refSeqStruct{}
-    _ = db.Select(&seqs, refSeqQuery, organism)
+	_ = db.Select(&seqs, refSeqQuery, organism)
 
 	for idx := range seqs {
 		seqs[idx].SeqChunkSize = 20000
