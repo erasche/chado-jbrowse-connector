@@ -48,33 +48,6 @@ type simpleFeature struct {
 	NullName    sql.NullString  `db:"feature_name"`
 }
 
-var simpleFeatQuery = `
-SELECT
-    cvterm.name AS feature_type,
-
-    featureloc.fmin AS feature_fmin,
-    featureloc.fmax AS feature_fmax,
-    featureloc.strand AS feature_strand,
-
-    feature.name AS feature_name,
-    feature.uniquename AS feature_uniquename
-
-FROM feature
-    INNER JOIN
-    featureloc ON (feature.feature_id = featureloc.feature_id)
-    INNER JOIN
-    cvterm ON (feature.type_id = cvterm.cvterm_id)
-WHERE
-    (feature.organism_id = (select organism_id from organism where common_name = $1))
-	AND
-    (cvterm.name = $3)
-    AND
-    (featureloc.srcfeature_id = (select feature_id from feature where uniquename = $2))
-	AND
-	(featureloc.fmin <= $5 AND $4 <= featureloc.fmax)
-;
-`
-
 var simpleFeatQueryWithParent = `
 WITH RECURSIVE feature_tree(xfeature_id, feature_type, feature_fmin, feature_fmax, feature_strand, feature_name, feature_uniquename, object_id, parent_id)
 AS (
