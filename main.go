@@ -5,7 +5,10 @@ import (
 	"os"
 )
 
-var addr string
+var (
+	addr    string
+	jbrowse string
+)
 
 func main() {
 
@@ -25,14 +28,20 @@ func main() {
 		},
 		cli.StringFlag{
 			Name:  "sitePath",
-			Value: "http://shed.hx42.org:5000",
-			Usage: "set externally accessible URL. I'll fix this eventually.",
+			Value: "http://localhost:5000",
+			Usage: "set externally accessible URL.",
+		},
+		cli.StringFlag{
+			Name:  "jbrowse",
+			Value: "https://jbrowse.org/code/JBrowse-1.12.0/",
+			Usage: "JBrowse deployment to display REST tracks on",
 		},
 	}
 
 	app.Action = func(c *cli.Context) {
 
 		addr = c.String("sitePath")
+		jbrowse = c.String("jbrowse")
 		connect(
 			c.String("db"),
 			c.String("listenAddr"),

@@ -12,7 +12,7 @@ const homeTemplate = `
 		<ul>
 		{{range .Items}}
 			<li>
-				<a href="http://jbrowse.org/code/JBrowse-1.12.0/?data={{ $.FakeDirURL }}/{{ . }}">
+				<a href="{{ .JBrowseURL }}?data={{ $.FakeDirURL }}/{{ . }}">
 				{{ . }}
 				</a>
 			</li>

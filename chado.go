@@ -228,9 +228,11 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 		Title      string
 		Items      []string
 		FakeDirURL string
+		JBrowseURL string
 	}{
 		Title:      "Chado-JBrowse Connector",
 		FakeDirURL: addr + "/link",
+		JBrowseURL: jbrowse,
 		Items:      items,
 	}
 
