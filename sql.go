@@ -35,17 +35,17 @@ GROUP BY
 `
 
 type simpleFeature struct {
-    FeatureID   int                `db:"xfeature_id" json:"-"`
-	Type        string             `db:"feature_type" json:"type"`
-	Start       int                `db:"feature_fmin" json:"start"`
-	End         int                `db:"feature_fmax" json:"end"`
-	Strand      int                `db:"feature_strand" json:"strand"`
-	Name        string             `json:"name"`
-	UniqueID    string             `db:"feature_uniquename" json:"uniqueID"`
-    Score       float64            `json:"score"`
-    ParentID    int                `db:"parent_id" json:"-"`
-    Subfeatures []simpleFeature    `json:"subfeatures"`
-    NullName    sql.NullString     `db:"feature_name"`
+	FeatureID   int             `db:"xfeature_id" json:"-"`
+	Type        string          `db:"feature_type" json:"type"`
+	Start       int             `db:"feature_fmin" json:"start"`
+	End         int             `db:"feature_fmax" json:"end"`
+	Strand      int             `db:"feature_strand" json:"strand"`
+	Name        string          `json:"name"`
+	UniqueID    string          `db:"feature_uniquename" json:"uniqueID"`
+	Score       float64         `json:"score"`
+	ParentID    int             `db:"parent_id" json:"-"`
+	Subfeatures []simpleFeature `json:"subfeatures"`
+	NullName    sql.NullString  `db:"feature_name"`
 }
 
 var simpleFeatQuery = `
