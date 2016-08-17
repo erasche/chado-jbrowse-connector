@@ -6,8 +6,9 @@ until nc -z db 5432; do
     sleep 2
 done
 
-./chado-jb-rest-api \
-    --db "postgres://postgres:$POSTGRES_PASSWORD@db/postgres?sslmode=disable" \
-    --listenAddr "0.0.0.0:8500" \
-    --sitePath "$SITE_PATH" \
-    --jbrowse "$JBROWSE"
+export CHADOJB_DBSTRING="postgres://postgres:$POSTGRES_PASSWORD@db/postgres?sslmode=disable"
+export CHADOJB_LISTENADDR="0.0.0.0:8500"
+export CHADOJB_SITEPATH="$SITE_PATH"
+export CHADOJB_JBROWSE="$JBROWSE"
+
+./chado-jb-rest-api
