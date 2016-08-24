@@ -36,4 +36,11 @@ $(TARGET): $(SRC) deps gofmt
 clean:
 	$(RM) $(TARGET)
 
+release:
+	rm -rf dist/
+	mkdir dist
+	go get github.com/mitchellh/gox
+	go get github.com/tcnksm/ghr
+	gox -ldflags "-X main.version=`date -u +%Y-%m-%dT%H:%M:%S+00:00`" -output "dist/cjc_{{.OS}}_{{.Arch}}" -osarch="linux/amd64"
+
 .PHONY: clean
