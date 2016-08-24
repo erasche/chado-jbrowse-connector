@@ -1,15 +1,17 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/codegangsta/cli"
 )
 
 var (
-	addr    string
-	jbrowse string
-	version string
+	addr      string
+	jbrowse   string
+	version   string
+	builddate string
 )
 
 func main() {
@@ -17,7 +19,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "chado-jb-connector"
 	app.Usage = "serve Chado as JBrowse REST compatible API"
-	app.Version = version
+	app.Version = fmt.Sprintf("%s (%s)", version, builddate)
 
 	app.Flags = []cli.Flag{
 		cli.StringFlag{

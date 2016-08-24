@@ -1,5 +1,6 @@
 SRC := $(wildcard *.go)
 TARGET := chado-jb-rest-api
+VERSION := $(shell git describe --tags)
 
 all: $(TARGET)
 
@@ -41,6 +42,7 @@ release:
 	mkdir dist
 	go get github.com/mitchellh/gox
 	go get github.com/tcnksm/ghr
-	gox -ldflags "-X main.version=`date -u +%Y-%m-%dT%H:%M:%S+00:00`" -output "dist/cjc_{{.OS}}_{{.Arch}}" -osarch="linux/amd64"
+	gox -ldflags "-X main.version=$(VERSION) -X main.builddate=`date -u +%Y-%m-%dT%H:%M:%SZ`" -output "dist/cjc_{{.OS}}_{{.Arch}}" -osarch="linux/amd64"
+	ghr -u erasche $(VERSION) -replace dist/
 
 .PHONY: clean
