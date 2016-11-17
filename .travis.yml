@@ -17,7 +17,22 @@ deploy:
   provider: releases
   api_key:
     secure: e82XcRAyB3qyFAv1fw1KStq8En6NrMJv5IJOm/CMoVGLW/PGSEMIapst7oswiABgWIa/jzdMv4PTN+IDYBs+8DbV7WZV1r4zimMY7m8asKgO/GIrKOOpxvB8wY4mzIzYHdwd/DN/0Prrsh+0g1ZVn/W3V2uwlPLZFstOX8NBNcTS98+CwpJxDFrEl3HP24/YqmR5gLVPtzCLwa2izYKiZ5j/GOUDIyTBHexFT0EDJjH4FG8PVJ1K6Rj6JjHIfH3HZNQxBr8fB6dZec0LuODNyg52p7x4whp8ygBqr1gKpqCbHH3zIjzh61DotoR335zkyy8+Hln9W9YlEPBsSbixaa+s+Vg4A5NKzOnxZd5OTANKBXoWDFSZ7BdFKHWAe7KGwzg5zpltJuBZXbGB23M2LvB3rABOroo0RBZok1ADfIeEyaCV1YKof7MbBNoddenq8l4xXUpDb9oObs5VaRBhnjfJK5tRUJHBNyPx6y4asZf5uYVhZ/Yhu4ceUYvq5awsltX615mXkiECH27suhwx+4kPve6it5HVq90gdSRh5F0Eg/kANKvQ63n8naGn14C3PwQZJDa0Sjicdd0W+1ym/fn3LAceaBARHjVRzYsBYjJOxLv26everDKjkgmlk2GyMsAbaP+ZOFzFZicjRzbMK+7J7QOv3gInBO9/Umbp5ss=
-  file: dist/*
+  file:
+  - dist/cjc_darwin_386
+  - dist/cjc_darwin_amd64
+  - dist/cjc_freebsd_386
+  - dist/cjc_freebsd_amd64
+  - dist/cjc_freebsd_arm
+  - dist/cjc_linux_386
+  - dist/cjc_linux_amd64
+  - dist/cjc_linux_arm
+  - dist/cjc_netbsd_386
+  - dist/cjc_netbsd_amd64
+  - dist/cjc_netbsd_arm
+  - dist/cjc_openbsd_386
+  - dist/cjc_openbsd_amd64
+  - dist/cjc_windows_386.exe
+  - dist/cjc_windows_amd64.exe
   on:
     repo: erasche/chado-jbrowse-connector
   on:
