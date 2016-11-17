@@ -1,11 +1,18 @@
 language: go
 go:
 - '1.7'
+script:
+- go get github.com/Masterminds/glide/...
+- go install github.com/Masterminds/glide/...
+- glide install
+- go vet
+- golint *.go
+- go test -v .
 build:
 - rm -rf dist/
 - mkdir dist
 - go get github.com/mitchellh/gox
-- gox -ldflags "-X main.version=$(VERSION) -X main.builddate=`date -u +%Y-%m-%dT%H:%M:%SZ`" -output "dist/cjc_{{.OS}}_{{.Arch}}"
+- gox -ldflags "-X main.version=${TRAVIS_TAG} -X main.builddate=`date -u +%Y-%m-%dT%H:%M:%SZ`" -output "dist/cjc_{{.OS}}_{{.Arch}}"
 deploy:
   provider: releases
   api_key:
@@ -13,3 +20,7 @@ deploy:
   file: dist/*
   on:
     repo: erasche/chado-jbrowse-connector
+  on:
+    tags: true
+    all_branches: true
+  skip_cleanup: true
