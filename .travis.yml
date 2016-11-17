@@ -1,6 +1,17 @@
+sudo: required
+
+services:
+- docker
+
 language: go
 go:
 - '1.7'
+
+before_install:
+- docker pull erasche/chado:latest
+- docker run -d -p 127.0.0.1:5432:5432 -e INSTALL_YEAST_DATA=1 erasche/chado
+- docker ps -a
+
 script:
 - go get -u github.com/golang/lint/golint
 - go get github.com/Masterminds/glide/...
@@ -9,10 +20,15 @@ script:
 - go vet
 - golint *.go
 - go test -v .
+- make
+- chado-jb-rest-api --db "postgres://postgres:postgres@127.0.0.1:5432/postgres?sslmode=disable" &
+
+
 - rm -rf dist/
 - mkdir dist
 - go get github.com/mitchellh/gox
 - gox -ldflags "-X main.version=${TRAVIS_TAG} -X main.builddate=`date -u +%Y-%m-%dT%H:%M:%SZ`" -arch amd64 -output "dist/cjc_{{.OS}}_{{.Arch}}"
+
 deploy:
   provider: releases
   api_key:
