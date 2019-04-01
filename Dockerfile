@@ -1,5 +1,4 @@
 FROM alpine:3.4
-MAINTAINER Eric Rasche <esr@tamu.edu>
 EXPOSE 5000
 
 RUN apk update && \
